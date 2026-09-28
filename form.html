@@ -1,0 +1,1114 @@
+<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>فرم و تبدیل‌ها با تیروتیر — ۱۵ برنامهٔ کاربردی</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap">
+<style>:root{--bg:#f7f7f5;--fg:#1c1c1a;--card:#fff;--bd:#e2e2dc;--mut:#5f5f58;--code:#f1f1ec;--btn:#1c1c1a;--btnfg:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#151514;--fg:#ececE6;--card:#1f1f1d;--bd:#33332f;--mut:#a3a39b;--code:#181817;--btn:#ececE6;--btnfg:#151514}}
+:root[data-theme="dark"]{--bg:#151514;--fg:#ececE6;--card:#1f1f1d;--bd:#33332f;--mut:#a3a39b;--code:#181817;--btn:#ececE6;--btnfg:#151514}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.85 Vazirmatn,Tahoma,"Segoe UI",sans-serif}
+main{max-width:980px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:1.7rem;margin:.4em 0}h2{font-size:1.25rem;margin:2em 0 .6em;border-bottom:2px solid var(--bd);padding-bottom:.3em}h3{margin:0;font-size:1.1rem}
+.mut,.badge{color:var(--mut)}.badge{font-size:.82rem;margin:4px 0}
+.card,details{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin:14px 0}
+summary{cursor:pointer;font-weight:700}
+table{border-collapse:collapse;width:100%;font-size:.93rem;display:block;overflow-x:auto}td,th{border:1px solid var(--bd);padding:5px 10px;text-align:right}
+code{background:var(--code);padding:1px 6px;border-radius:5px;font-size:.92em}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:8px 0}
+.two{display:grid;grid-template-columns:1fr;gap:12px}@media(min-width:760px){.two{grid-template-columns:auto 1fr}}
+img{max-width:100%;height:auto;border:1px solid var(--bd);border-radius:6px;background:#d9d9d9}
+pre{direction:rtl;text-align:right;unicode-bidi:plaintext;background:var(--code);border:1px solid var(--bd);border-radius:8px;padding:10px 12px;margin:8px 0;overflow-x:auto;font:14px/1.7 Vazirmatn,Tahoma,monospace;max-height:320px;white-space:pre}
+pre.run{max-height:340px}
+button{font:inherit;font-size:.85rem;background:var(--btn);color:var(--btnfg);border:0;border-radius:8px;padding:4px 14px;cursor:pointer}
+li{margin:.3em 0}
+</style></head><body><main>
+<h1>فرم و تبدیل‌ها با تیروتیر</h1>
+<p class="mut">۱۵ برنامهٔ کاربردی؛ هر کدام یک فرم ویندوز (عکس واقعی) و یک برنامهٔ کنسولی که واقعاً محاسبه می‌کند (نمونهٔ اجرا از مفسر تیروتیر ۱٫۱٫۰). تبدیل تاریخ با ۶۱۰ بررسی روی الگوریتم مرجع سنجیده شده است.</p>
+
+<details open><summary>۱) GUI در تیروتیر ۱٫۱٫۰ چه می‌تواند و چه نمی‌تواند (از سورس)</summary>
+<table><tr><th>دستور</th><th>نحو</th></tr>
+<tr><td>پنجره</td><td><code>پنجره بساز با -عنوان- و ۴۲۰ و ۳۰۰</code> (عرض و ارتفاع)</td></tr>
+<tr><td>برچسب / دکمه</td><td><code>برچسب بساز با -متن-</code> · <code>دکمه بساز با -متن-</code></td></tr>
+<tr><td>ورودی / متن چندخطی</td><td><code>ورودی بساز</code> · <code>متن چندخطی بساز</code> (بدون آرگومان)</td></tr>
+<tr><td>چک‌باکس</td><td><code>چک‌باکس بساز با -متن-</code></td></tr>
+<tr><td>فهرست / منوی انتخاب</td><td><code>لیست بساز با -الف- و -ب-</code> · <code>منوی انتخاب بساز با -الف- و -ب-</code></td></tr>
+<tr><td>نوار لغزش</td><td><code>نوار لغزش بساز با ۱۰۰</code> (بیشینه، از ۰)</td></tr>
+<tr><td>نمایش / بستن</td><td><code>نمایش پنجره</code> (باید آخر برنامه باشد) · <code>پنجره ببند</code></td></tr></table>
+<p><b>اجرا:</b> <code>tirotir gui فایل.t</code> روی ویندوز یا هر دسکتاپی که Tkinter دارد. در <code>tirotir.toml</code> کلید <code>gui</code> باید <code>true</code> باشد. ویجت‌ها به ترتیب زیر هم چیده می‌شوند؛ مکان‌دهی، اندازه و رنگ ویجت قابل تنظیم نیست.</p>
+<p><b>مهم‌ترین محدودیت:</b> در این نسخه <b>callback و رویداد برای دکمه‌ها وجود ندارد و مقدار ورودی‌ها هم قابل خواندن نیست</b> (README رسمی هم همین را می‌گوید). بنابراین فرم «تبدیل» نمی‌تواند خودش محاسبه کند. برای همین هر برنامه را در دو لایه نوشته‌ام: <b>فرم ویندوز</b> (ظاهر، با همین دستورهای واقعی) و <b>برنامهٔ کاربردی کنسول</b> که با <code>چاپ</code> و <code>بخوان</code> واقعاً محاسبه می‌کند.</p></details>
+<details><summary>۲) آموزش برنامهٔ کاربردی کنسول</summary>
+<pre>چاپ -مقدار:-
+بگذار س برابر بخوان          # دریافت یک خط از کاربر (متن)
+بگذار عدد برابر به_عدد با س   # تبدیل متن به عدد
+چاپ -دو برابر: - + به_متن با عدد * ۲</pre>
+<p>اجرا: <code>tirotir run فایل.t</code>. ورودی را با ارقام لاتین یا فارسی بنویسید، اما ممیز اعشار را «.» بزنید (مثل ۲.۵)، چون «٫» را به‌عنوان عدد نمی‌شناسد.</p></details>
+<details open><summary>۳) نکته‌ها و دام‌هایی که هنگام آزمایش پیدا کردم</summary><ul>
+<li><b>نیم‌فاصله داخل رشته‌ها به «_» تبدیل می‌شود:</b> «سانتی‌متر» چاپ می‌شود «سانتی_متر». پس در متن‌ها بنویسید «سانتیمتر» یا با فاصله (در نام متغیرها مشکلی نیست).</li>
+<li><b>رشته نمی‌تواند با فاصله شروع شود:</b> <code>- روز-</code> به‌جای رشته، «منها» تلقی می‌شود. فاصله را انتهای رشته بگذارید: <code>-روز: -</code>.</li>
+<li><b>فراخوانی تابع دوآرگومانی وسط عبارت بقیهٔ عبارت را می‌بلعد:</b> <code>خارج با الف و ب + ۱</code> یعنی «خارج(الف، ب+۱)». در عبارت‌های بلند، هر تابع را جدا در یک متغیر بگذارید.</li>
+<li><b>اندیس فهرست باید عدد صحیح باشد:</b> <code>به_عدد</code> اعشاری (مثل ۳٫۰) می‌دهد، پس تابع کمکی «صحیح» را در برنامه‌ها می‌بینید.</li>
+<li>عدد اعشاری با <code>چاپ</code> مثل <code>3.0</code> نمایش داده می‌شود؛ تابع «خوب» گرد می‌کند و «.0» اضافی را می‌اندازد. ارقام خروجی لاتین است.</li>
+<li>جمع متن و عدد خطا می‌دهد؛ عدد را با <code>به_متن</code> متن کنید. <code>تکرار n</code> با متغیر را بدون «بار» بنویسید. تابع بدون آرگومان قابل فراخوانی نیست.</li>
+<li>رشتهٔ خالی <code>--</code> ممکن نیست.</li></ul></details>
+<h2>برنامه‌ها</h2><div class="card"><div class="row"><h3>1. تبدیل طول</h3></div>
+<div class="two"><div><p class="badge">فرم ویندوز (عکس واقعی از اجرای Tkinter)</p><img alt="فرم تبدیل طول" src="data:image/png;base64,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"></div>
+<div><p class="badge">نمونهٔ اجرای برنامهٔ کاربردی (خروجی واقعی مفسر)</p><pre class="run">=== تبدیل طول ===
+1) متر
+2) سانتیمتر
+3) میلیمتر
+4) کیلومتر
+5) اینچ
+6) فوت
+7) مایل
+شمارهٔ واحد مبدأ:
+» 4
+شمارهٔ واحد مقصد:
+» 1
+مقدار:
+» 2.5
+کیلومتر: 2.5
+متر: 2500</pre></div></div>
+<div class="row"><b>الف) برنامهٔ کاربردی (کنسول، محاسبه می‌کند)</b><button onclick="cp(this)">کپی</button></div><pre># ---- توابع کمکی ----
+# «صحیح»: عدد اعشاری (مثل ۳٫۰) را به عدد صحیح تبدیل می‌کند (برای اندیس فهرست)
+تابع صحیح با x
+    بگذار i برابر ۰
+    تاوقتی i + ۱ &lt;= x
+        بگذار i برابر i + ۱
+    بازگردان i
+# «خوب»: گرد کردن تا ۶ رقم اعشار و حذف «.0» اضافی از انتهای عدد
+تابع خوب با عدد
+    بگذار ص برابر عدد * ۱۰۰۰۰۰۰ + ۰٫۵
+    بگذار ص برابر (ص - ص % ۱) / ۱۰۰۰۰۰۰
+    بگذار م برابر به_متن با ص
+    بگذار ن برابر طول با م
+    اگر ن &gt; ۲
+        اگر م[ن - ۲] == -.- و م[ن - ۱] == -0-
+            بگذار خ برابر م[۰]
+            بگذار ک برابر ۱
+            تاوقتی ک &lt; ن - ۲
+                بگذار خ برابر خ + م[ک]
+                بگذار ک برابر ک + ۱
+            بازگردان خ
+    بازگردان م
+# ---- برنامه ----
+بگذار نام‌ها برابر [-متر-، -سانتیمتر-، -میلیمتر-، -کیلومتر-، -اینچ-، -فوت-، -مایل-]
+بگذار ضریب‌ها برابر [۱، ۰٫۰۱، ۰٫۰۰۱، ۱۰۰۰، ۰٫۰۲۵۴، ۰٫۳۰۴۸، ۱۶۰۹٫۳۴۴]
+چاپ -=== تبدیل طول ===-
+بگذار ش برابر ۱
+برای و در نام‌ها
+    بگذار ر برابر به_متن با ش
+    چاپ ر + -) - + و
+    بگذار ش برابر ش + ۱
+چاپ -شمارهٔ واحد مبدأ:-
+بگذار س برابر بخوان
+بگذار ع برابر به_عدد با س
+بگذار الف برابر صحیح با ع
+چاپ -شمارهٔ واحد مقصد:-
+بگذار س برابر بخوان
+بگذار ع برابر به_عدد با س
+بگذار ب برابر صحیح با ع
+چاپ -مقدار:-
+بگذار س برابر بخوان
+بگذار مقدار برابر به_عدد با س
+بگذار تعداد برابر طول با نام‌ها
+اگر الف &lt; ۱ یا الف &gt; تعداد یا ب &lt; ۱ یا ب &gt; تعداد
+    چاپ -شمارهٔ واحد درست نیست.-
+وگرنه
+    بگذار نتیجه برابر مقدار * ضریب‌ها[الف - ۱] / ضریب‌ها[ب - ۱]
+    بگذار پ برابر خوب با نتیجه
+    بگذار ت برابر خوب با مقدار
+    چاپ نام‌ها[الف - ۱] + -: - + ت
+    چاپ نام‌ها[ب - ۱] + -: - + پ
+</pre>
+<div class="row"><b>ب) فرم ویندوز (فقط ظاهر)</b><button onclick="cp(this)">کپی</button></div><pre>پنجره بساز با -تبدیل طول- و ۴۲۰ و 358
+برچسب بساز با -مقدار-
+ورودی بساز
+برچسب بساز با -از واحد-
+منوی انتخاب بساز با -متر- و -سانتیمتر- و -میلیمتر- و -کیلومتر- و -اینچ- و -فوت- و -مایل-
+برچسب بساز با -به واحد-
+منوی انتخاب بساز با -متر- و -سانتیمتر- و -میلیمتر- و -کیلومتر- و -اینچ- و -فوت- و -مایل-
+دکمه بساز با -تبدیل-
+نمایش پنجره
+</pre></div><div class="card"><div class="row"><h3>2. تبدیل وزن</h3></div>
+<div class="two"><div><p class="badge">فرم ویندوز (عکس واقعی از اجرای Tkinter)</p><img alt="فرم تبدیل وزن" src="data:image/png;base64,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"></div>
+<div><p class="badge">نمونهٔ اجرای برنامهٔ کاربردی (خروجی واقعی مفسر)</p><pre class="run">=== تبدیل وزن ===
+1) کیلوگرم
+2) گرم
+3) میلیگرم
+4) تن
+5) پوند
+6) اونس
+شمارهٔ واحد مبدأ:
+» 5
+شمارهٔ واحد مقصد:
+» 1
+مقدار:
+» 2
+پوند: 2
+کیلوگرم: 0.907185</pre></div></div>
+<div class="row"><b>الف) برنامهٔ کاربردی (کنسول، محاسبه می‌کند)</b><button onclick="cp(this)">کپی</button></div><pre># ---- توابع کمکی ----
+# «صحیح»: عدد اعشاری (مثل ۳٫۰) را به عدد صحیح تبدیل می‌کند (برای اندیس فهرست)
+تابع صحیح با x
+    بگذار i برابر ۰
+    تاوقتی i + ۱ &lt;= x
+        بگذار i برابر i + ۱
+    بازگردان i
+# «خوب»: گرد کردن تا ۶ رقم اعشار و حذف «.0» اضافی از انتهای عدد
+تابع خوب با عدد
+    بگذار ص برابر عدد * ۱۰۰۰۰۰۰ + ۰٫۵
+    بگذار ص برابر (ص - ص % ۱) / ۱۰۰۰۰۰۰
+    بگذار م برابر به_متن با ص
+    بگذار ن برابر طول با م
+    اگر ن &gt; ۲
+        اگر م[ن - ۲] == -.- و م[ن - ۱] == -0-
+            بگذار خ برابر م[۰]
+            بگذار ک برابر ۱
+            تاوقتی ک &lt; ن - ۲
+                بگذار خ برابر خ + م[ک]
+                بگذار ک برابر ک + ۱
+            بازگردان خ
+    بازگردان م
+# ---- برنامه ----
+بگذار نام‌ها برابر [-کیلوگرم-، -گرم-، -میلیگرم-، -تن-، -پوند-، -اونس-]
+بگذار ضریب‌ها برابر [۱، ۰٫۰۰۱، ۰٫۰۰۰۰۰۱، ۱۰۰۰، ۰٫۴۵۳۵۹۲۳۷، ۰٫۰۲۸۳۴۹۵۲۳۱۲۵]
+چاپ -=== تبدیل وزن ===-
+بگذار ش برابر ۱
+برای و در نام‌ها
+    بگذار ر برابر به_متن با ش
+    چاپ ر + -) - + و
+    بگذار ش برابر ش + ۱
+چاپ -شمارهٔ واحد مبدأ:-
+بگذار س برابر بخوان
+بگذار ع برابر به_عدد با س
+بگذار الف برابر صحیح با ع
+چاپ -شمارهٔ واحد مقصد:-
+بگذار س برابر بخوان
+بگذار ع برابر به_عدد با س
+بگذار ب برابر صحیح با ع
+چاپ -مقدار:-
+بگذار س برابر بخوان
+بگذار مقدار برابر به_عدد با س
+بگذار تعداد برابر طول با نام‌ها
+اگر الف &lt; ۱ یا الف &gt; تعداد یا ب &lt; ۱ یا ب &gt; تعداد
+    چاپ -شمارهٔ واحد درست نیست.-
+وگرنه
+    بگذار نتیجه برابر مقدار * ضریب‌ها[الف - ۱] / ضریب‌ها[ب - ۱]
+    بگذار پ برابر خوب با نتیجه
+    بگذار ت برابر خوب با مقدار
+    چاپ نام‌ها[الف - ۱] + -: - + ت
+    چاپ نام‌ها[ب - ۱] + -: - + پ
+</pre>
+<div class="row"><b>ب) فرم ویندوز (فقط ظاهر)</b><button onclick="cp(this)">کپی</button></div><pre>پنجره بساز با -تبدیل وزن- و ۴۲۰ و 358
+برچسب بساز با -مقدار-
+ورودی بساز
+برچسب بساز با -از واحد-
+منوی انتخاب بساز با -کیلوگرم- و -گرم- و -میلیگرم- و -تن- و -پوند- و -اونس-
+برچسب بساز با -به واحد-
+منوی انتخاب بساز با -کیلوگرم- و -گرم- و -میلیگرم- و -تن- و -پوند- و -اونس-
+دکمه بساز با -تبدیل-
+نمایش پنجره
+</pre></div><div class="card"><div class="row"><h3>3. تبدیل حجم</h3></div>
+<div class="two"><div><p class="badge">فرم ویندوز (عکس واقعی از اجرای Tkinter)</p><img alt="فرم تبدیل حجم" src="data:image/png;base64,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660ppdx9rL4WD2+rn8V8basjN7fI0A2ljJxdy+du+cHspZW7k0vfxMd+dtz5fzd4hY4a1eF8ctJ+x41fpnlaa1gKz327P/Wiz2NT43Z+NPpBc/k/lW7oymTiCEYFcaigAgxlqCsFBSU3bynJ2h0T+zejU7fW7ko5HQ7DVeJwlrOH4pMbV2+71PThpjf8UjHNy2r1yLdfdig9c0fMzJV7cg2lNL9ecxKin/be/8GrfcKfnZti15VSSj+XNHHA5OQM/ed765cu2o3qfj4aDw8qhN9nh9vTavUY1G3J9NdG5L3wbPgjDwRYVPHljDPpx48e3POPb2z6H8Yumt3XX1PK//H+YbEzJ7yUP3xQt9ZNalnU1dwfz59JP5F6aM8/953zCZ+xZGQzszJyUncdzPPxtO+Lj/3c0TayrZeRvTV+zeHQXtfDZWncM+LdnuML984ZMGZh4sDOEcHmkmNf7862Phfw85Nz8dFtX56t2al5bZ6vUTHEDhVgqt13/ga/j5av3bpkxvKL+Q6TZ43aQY2bPdTyT5NGLurdqZH3tUqZAgcsSLB+tCJu2/tvfHAx36F5+AbUC2rUrHnLgX+e0Cc8tI6HUkoZhSc2zY9OydL9Q7pGxEYODjSpbHc3LS8zo8Bo7nd9oVZiP7IpISXTK6RJgEkp5Va/Yb3srfHJR5sODPHOP31oZ9LSmISfwmaNaOvOo4OK0Ww2G1OQKTg4+Nfym4qNvG+ih4/778uNH23XtPpV+4Vzp0+euqQa9ngl6q+jH61pUkoZeUfWzJge+/ezhbqhaZ4BLbo/O37y2PBGHhX/JvymYuGInVxVHDvj8uYpLx8f+vEbHSq2+Co+9z+bN311LKvY7Fu3cXCLNh06tAz0Kn2OalzNuXDeXuJVJ6iur/sdX6sjdsJxGosqoll7vflhuKXCp5mWBmFDJ4T9/7v0sAY1tTJaVAqxQ1UxefrWZAr49RyQjACABMQOgAjEDoAIxA6ACMQOgAi8GitaYmIiQ4AQvKkYgAicxgIQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEOF/Aancwp4MV9ZqAAAAAElFTkSuQmCC"></div>
+<div><p class="badge">نمونهٔ اجرای برنامهٔ کاربردی (خروجی واقعی مفسر)</p><pre class="run">=== تبدیل حجم ===
+1) لیتر
+2) میلیلیتر
+3) متر مکعب
+4) گالن آمریکایی
+شمارهٔ واحد مبدأ:
+» 4
+شمارهٔ واحد مقصد:
+» 1
+مقدار:
+» 3
+گالن آمریکایی: 3
+لیتر: 11.356235</pre></div></div>
+<div class="row"><b>الف) برنامهٔ کاربردی (کنسول، محاسبه می‌کند)</b><button onclick="cp(this)">کپی</button></div><pre># ---- توابع کمکی ----
+# «صحیح»: عدد اعشاری (مثل ۳٫۰) را به عدد صحیح تبدیل می‌کند (برای اندیس فهرست)
+تابع صحیح با x
+    بگذار i برابر ۰
+    تاوقتی i + ۱ &lt;= x
+        بگذار i برابر i + ۱
+    بازگردان i
+# «خوب»: گرد کردن تا ۶ رقم اعشار و حذف «.0» اضافی از انتهای عدد
+تابع خوب با عدد
+    بگذار ص برابر عدد * ۱۰۰۰۰۰۰ + ۰٫۵
+    بگذار ص برابر (ص - ص % ۱) / ۱۰۰۰۰۰۰
+    بگذار م برابر به_متن با ص
+    بگذار ن برابر طول با م
+    اگر ن &gt; ۲
+        اگر م[ن - ۲] == -.- و م[ن - ۱] == -0-
+            بگذار خ برابر م[۰]
+            بگذار ک برابر ۱
+            تاوقتی ک &lt; ن - ۲
+                بگذار خ برابر خ + م[ک]
+                بگذار ک برابر ک + ۱
+            بازگردان خ
+    بازگردان م
+# ---- برنامه ----
+بگذار نام‌ها برابر [-لیتر-، -میلیلیتر-، -متر مکعب-، -گالن آمریکایی-]
+بگذار ضریب‌ها برابر [۱، ۰٫۰۰۱، ۱۰۰۰، ۳٫۷۸۵۴۱۱۷۸۴]
+چاپ -=== تبدیل حجم ===-
+بگذار ش برابر ۱
+برای و در نام‌ها
+    بگذار ر برابر به_متن با ش
+    چاپ ر + -) - + و
+    بگذار ش برابر ش + ۱
+چاپ -شمارهٔ واحد مبدأ:-
+بگذار س برابر بخوان
+بگذار ع برابر به_عدد با س
+بگذار الف برابر صحیح با ع
+چاپ -شمارهٔ واحد مقصد:-
+بگذار س برابر بخوان
+بگذار ع برابر به_عدد با س
+بگذار ب برابر صحیح با ع
+چاپ -مقدار:-
+بگذار س برابر بخوان
+بگذار مقدار برابر به_عدد با س
+بگذار تعداد برابر طول با نام‌ها
+اگر الف &lt; ۱ یا الف &gt; تعداد یا ب &lt; ۱ یا ب &gt; تعداد
+    چاپ -شمارهٔ واحد درست نیست.-
+وگرنه
+    بگذار نتیجه برابر مقدار * ضریب‌ها[الف - ۱] / ضریب‌ها[ب - ۱]
+    بگذار پ برابر خوب با نتیجه
+    بگذار ت برابر خوب با مقدار
+    چاپ نام‌ها[الف - ۱] + -: - + ت
+    چاپ نام‌ها[ب - ۱] + -: - + پ
+</pre>
+<div class="row"><b>ب) فرم ویندوز (فقط ظاهر)</b><button onclick="cp(this)">کپی</button></div><pre>پنجره بساز با -تبدیل حجم- و ۴۲۰ و 358
+برچسب بساز با -مقدار-
+ورودی بساز
+برچسب بساز با -از واحد-
+منوی انتخاب بساز با -لیتر- و -میلیلیتر- و -متر مکعب- و -گالن آمریکایی-
+برچسب بساز با -به واحد-
+منوی انتخاب بساز با -لیتر- و -میلیلیتر- و -متر مکعب- و -گالن آمریکایی-
+دکمه بساز با -تبدیل-
+نمایش پنجره
+</pre></div><div class="card"><div class="row"><h3>4. تبدیل سرعت</h3></div>
+<div class="two"><div><p class="badge">فرم ویندوز (عکس واقعی از اجرای Tkinter)</p><img alt="فرم تبدیل سرعت" src="data:image/png;base64,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"></div>
+<div><p class="badge">نمونهٔ اجرای برنامهٔ کاربردی (خروجی واقعی مفسر)</p><pre class="run">=== تبدیل سرعت ===
+1) متر بر ثانیه
+2) کیلومتر بر ساعت
+3) مایل بر ساعت
+4) گره دریایی
+شمارهٔ واحد مبدأ:
+» 2
+شمارهٔ واحد مقصد:
+» 1
+مقدار:
+» 90
+کیلومتر بر ساعت: 90
+متر بر ثانیه: 25</pre></div></div>
+<div class="row"><b>الف) برنامهٔ کاربردی (کنسول، محاسبه می‌کند)</b><button onclick="cp(this)">کپی</button></div><pre># ---- توابع کمکی ----
+# «صحیح»: عدد اعشاری (مثل ۳٫۰) را به عدد صحیح تبدیل می‌کند (برای اندیس فهرست)
+تابع صحیح با x
+    بگذار i برابر ۰
+    تاوقتی i + ۱ &lt;= x
+        بگذار i برابر i + ۱
+    بازگردان i
+# «خوب»: گرد کردن تا ۶ رقم اعشار و حذف «.0» اضافی از انتهای عدد
+تابع خوب با عدد
+    بگذار ص برابر عدد * ۱۰۰۰۰۰۰ + ۰٫۵
+    بگذار ص برابر (ص - ص % ۱) / ۱۰۰۰۰۰۰
+    بگذار م برابر به_متن با ص
+    بگذار ن برابر طول با م
+    اگر ن &gt; ۲
+        اگر م[ن - ۲] == -.- و م[ن - ۱] == -0-
+            بگذار خ برابر م[۰]
+            بگذار ک برابر ۱
+            تاوقتی ک &lt; ن - ۲
+                بگذار خ برابر خ + م[ک]
+                بگذار ک برابر ک + ۱
+            بازگردان خ
+    بازگردان م
+# ---- برنامه ----
+بگذار نام‌ها برابر [-متر بر ثانیه-، -کیلومتر بر ساعت-، -مایل بر ساعت-، -گره دریایی-]
+بگذار ضریب‌ها برابر [۱، ۰٫۲۷۷۷۷۷۷۷۷۷۷۷۸، ۰٫۴۴۷۰۴، ۰٫۵۱۴۴۴۴۴۴۴۴۴۴۴]
+چاپ -=== تبدیل سرعت ===-
+بگذار ش برابر ۱
+برای و در نام‌ها
+    بگذار ر برابر به_متن با ش
+    چاپ ر + -) - + و
+    بگذار ش برابر ش + ۱
+چاپ -شمارهٔ واحد مبدأ:-
+بگذار س برابر بخوان
+بگذار ع برابر به_عدد با س
+بگذار الف برابر صحیح با ع
+چاپ -شمارهٔ واحد مقصد:-
+بگذار س برابر بخوان
+بگذار ع برابر به_عدد با س
+بگذار ب برابر صحیح با ع
+چاپ -مقدار:-
+بگذار س برابر بخوان
+بگذار مقدار برابر به_عدد با س
+بگذار تعداد برابر طول با نام‌ها
+اگر الف &lt; ۱ یا الف &gt; تعداد یا ب &lt; ۱ یا ب &gt; تعداد
+    چاپ -شمارهٔ واحد درست نیست.-
+وگرنه
+    بگذار نتیجه برابر مقدار * ضریب‌ها[الف - ۱] / ضریب‌ها[ب - ۱]
+    بگذار پ برابر خوب با نتیجه
+    بگذار ت برابر خوب با مقدار
+    چاپ نام‌ها[الف - ۱] + -: - + ت
+    چاپ نام‌ها[ب - ۱] + -: - + پ
+</pre>
+<div class="row"><b>ب) فرم ویندوز (فقط ظاهر)</b><button onclick="cp(this)">کپی</button></div><pre>پنجره بساز با -تبدیل سرعت- و ۴۲۰ و 358
+برچسب بساز با -مقدار-
+ورودی بساز
+برچسب بساز با -از واحد-
+منوی انتخاب بساز با -متر بر ثانیه- و -کیلومتر بر ساعت- و -مایل بر ساعت- و -گره دریایی-
+برچسب بساز با -به واحد-
+منوی انتخاب بساز با -متر بر ثانیه- و -کیلومتر بر ساعت- و -مایل بر ساعت- و -گره دریایی-
+دکمه بساز با -تبدیل-
+نمایش پنجره
+</pre></div><div class="card"><div class="row"><h3>5. تبدیل حجم داده</h3></div>
+<div class="two"><div><p class="badge">فرم ویندوز (عکس واقعی از اجرای Tkinter)</p><img alt="فرم تبدیل حجم داده" src="data:image/png;base64,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tOetJwdH3D9re4FDKaUcOWuejnp2ba7jl3s7zuQX6I29PTUeHjiF32eHX6c1DY/ulzz1qUdKH74/4pYb/U2qsjD3ePaRQ/t2fLnT7PjrhHkvDfHTlPK7MzIsacakxyyjo/t17dDUpKpKTp88nn00c/+Or3bneEZMTx4TZFR6cWbGvlJP94LdqUkfW7vHdffQiz5KXXEgdOD5cJnaD4h9fcDE8l0zo8Ynpg+/PTbYWH346y+KfB70/+XJufLQ5k9P+N7asRnP13AOsYMTDM2GzFnt/e7ilR8lT1+cb7Ea3Js0a90+6KbOdz0zZt6gW9s1OlcpQ0DU3DSfd5ekbH5z2lv5Fqvm5uXfsnW7oI6dh78waXBEaHM3pZTSy49umJOw/ZTDL6RvbFLciACDKnJ10Urzcsv0jt7nF2rVBQc3pG3P8wjp4G9QSrm0atuy6KPUtYcCh4c0svywf9uahfPTfg578ZHurjw6cI5mNpuZgkzBwcHXy28q1kt3JoyOea+wfc8egY2rCn7K+eHY92dU2/An4v8xrqevQSmllx5cMX1q0mcnyh26prn739z//onPToho5+b8N+E3FQtH7OS6xrHTCzdOfvzIqPen9XZu8VWZ86+NGz4/fKrS6NWiffDN3Xr37hzgUfMcVa8q/ulkQbVH89YtvFyv+FodsROO01hcI5rPwJeXR5icPs00tQkbNSns8rt082kd6MNoUS/EDteKwd3Llyng+jkgGQEACYgdABGIHQARiB0AEYgdABF4NVa09PR0hgAheFMxABE4jQUgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIML/A1HmnGJ7Prm0AAAAAElFTkSuQmCC"></div>
+<div><p class="badge">نمونهٔ اجرای برنامهٔ کاربردی (خروجی واقعی مفسر)</p><pre class="run">=== تبدیل حجم داده ===
+1) بایت
+2) کیلوبایت
+3) مگابایت
+4) گیگابایت
+5) ترابایت
+شمارهٔ واحد مبدأ:
+» 4
+شمارهٔ واحد مقصد:
+» 3
+مقدار:
+» 2
+گیگابایت: 2
+مگابایت: 2048</pre></div></div>
+<div class="row"><b>الف) برنامهٔ کاربردی (کنسول، محاسبه می‌کند)</b><button onclick="cp(this)">کپی</button></div><pre># ---- توابع کمکی ----
+# «صحیح»: عدد اعشاری (مثل ۳٫۰) را به عدد صحیح تبدیل می‌کند (برای اندیس فهرست)
+تابع صحیح با x
+    بگذار i برابر ۰
+    تاوقتی i + ۱ &lt;= x
+        بگذار i برابر i + ۱
+    بازگردان i
+# «خوب»: گرد کردن تا ۶ رقم اعشار و حذف «.0» اضافی از انتهای عدد
+تابع خوب با عدد
+    بگذار ص برابر عدد * ۱۰۰۰۰۰۰ + ۰٫۵
+    بگذار ص برابر (ص - ص % ۱) / ۱۰۰۰۰۰۰
+    بگذار م برابر به_متن با ص
+    بگذار ن برابر طول با م
+    اگر ن &gt; ۲
+        اگر م[ن - ۲] == -.- و م[ن - ۱] == -0-
+            بگذار خ برابر م[۰]
+            بگذار ک برابر ۱
+            تاوقتی ک &lt; ن - ۲
+                بگذار خ برابر خ + م[ک]
+                بگذار ک برابر ک + ۱
+            بازگردان خ
+    بازگردان م
+# ---- برنامه ----
+بگذار نام‌ها برابر [-بایت-، -کیلوبایت-، -مگابایت-، -گیگابایت-، -ترابایت-]
+بگذار ضریب‌ها برابر [۱، ۱۰۲۴، ۱۰۴۸۵۷۶، ۱۰۷۳۷۴۱۸۲۴، ۱۰۹۹۵۱۱۶۲۷۷۷۶]
+چاپ -=== تبدیل حجم داده ===-
+بگذار ش برابر ۱
+برای و در نام‌ها
+    بگذار ر برابر به_متن با ش
+    چاپ ر + -) - + و
+    بگذار ش برابر ش + ۱
+چاپ -شمارهٔ واحد مبدأ:-
+بگذار س برابر بخوان
+بگذار ع برابر به_عدد با س
+بگذار الف برابر صحیح با ع
+چاپ -شمارهٔ واحد مقصد:-
+بگذار س برابر بخوان
+بگذار ع برابر به_عدد با س
+بگذار ب برابر صحیح با ع
+چاپ -مقدار:-
+بگذار س برابر بخوان
+بگذار مقدار برابر به_عدد با س
+بگذار تعداد برابر طول با نام‌ها
+اگر الف &lt; ۱ یا الف &gt; تعداد یا ب &lt; ۱ یا ب &gt; تعداد
+    چاپ -شمارهٔ واحد درست نیست.-
+وگرنه
+    بگذار نتیجه برابر مقدار * ضریب‌ها[الف - ۱] / ضریب‌ها[ب - ۱]
+    بگذار پ برابر خوب با نتیجه
+    بگذار ت برابر خوب با مقدار
+    چاپ نام‌ها[الف - ۱] + -: - + ت
+    چاپ نام‌ها[ب - ۱] + -: - + پ
+</pre>
+<div class="row"><b>ب) فرم ویندوز (فقط ظاهر)</b><button onclick="cp(this)">کپی</button></div><pre>پنجره بساز با -تبدیل حجم داده- و ۴۲۰ و 358
+برچسب بساز با -مقدار-
+ورودی بساز
+برچسب بساز با -از واحد-
+منوی انتخاب بساز با -بایت- و -کیلوبایت- و -مگابایت- و -گیگابایت- و -ترابایت-
+برچسب بساز با -به واحد-
+منوی انتخاب بساز با -بایت- و -کیلوبایت- و -مگابایت- و -گیگابایت- و -ترابایت-
+دکمه بساز با -تبدیل-
+نمایش پنجره
+</pre></div><div class="card"><div class="row"><h3>6. تبدیل دما</h3></div>
+<div class="two"><div><p class="badge">فرم ویندوز (عکس واقعی از اجرای Tkinter)</p><img alt="فرم تبدیل دما" src="data:image/png;base64,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1xZqRfb961btSLc2b1jdpJTyql2vVubX8UkHG73QvHLOL3u3Jn4Ws+py+JRX23rz6sAzms1mYxZkatKkye/lNxUb2f+aNSjyfzMaPNqukX+h/VzqLydOXlL1uv456n+GPFrVpJQysvcvnzQ+dsvpPN3QNN/qLbq8NHz0sIj6Pp5/E35TsXDETq4yjp2R8dWYN4/2/3JCB88WX47Uf361bvuR8w5zQM0GTVq07tChZaj15nNUozDr3Fl7kTWkTs0A73u+VkfshOM0FmVEC+r+wbIIi8enmZa64f1Hhv/nIX2C6jQKYmpRLMQOZcXkG1CVWcDv54BkCgBIQOwAiEDsAIhA7ACIQOwAiMDdWNESEhKYBAjBm4oBiMBpLAARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEf4f0FTiFaBCULwAAAAASUVORK5CYII="></div>
+<div><p class="badge">نمونهٔ اجرای برنامهٔ کاربردی (خروجی واقعی مفسر)</p><pre class="run">=== تبدیل دما ===
+۱) سلسیوس  ۲) فارنهایت  ۳) کلوین
+واحد مبدأ:
+» 1
+واحد مقصد:
+» 2
+مقدار:
+» 100
+نتیجه:
+212</pre></div></div>
+<div class="row"><b>الف) برنامهٔ کاربردی (کنسول، محاسبه می‌کند)</b><button onclick="cp(this)">کپی</button></div><pre># ---- توابع کمکی ----
+# «صحیح»: عدد اعشاری (مثل ۳٫۰) را به عدد صحیح تبدیل می‌کند (برای اندیس فهرست)
+تابع صحیح با x
+    بگذار i برابر ۰
+    تاوقتی i + ۱ &lt;= x
+        بگذار i برابر i + ۱
+    بازگردان i
+# «خوب»: گرد کردن تا ۶ رقم اعشار و حذف «.0» اضافی از انتهای عدد
+تابع خوب با عدد
+    بگذار ص برابر عدد * ۱۰۰۰۰۰۰ + ۰٫۵
+    بگذار ص برابر (ص - ص % ۱) / ۱۰۰۰۰۰۰
+    بگذار م برابر به_متن با ص
+    بگذار ن برابر طول با م
+    اگر ن &gt; ۲
+        اگر م[ن - ۲] == -.- و م[ن - ۱] == -0-
+            بگذار خ برابر م[۰]
+            بگذار ک برابر ۱
+            تاوقتی ک &lt; ن - ۲
+                بگذار خ برابر خ + م[ک]
+                بگذار ک برابر ک + ۱
+            بازگردان خ
+    بازگردان م
+# ---- برنامه ----
+چاپ -=== تبدیل دما ===-
+چاپ -۱) سلسیوس  ۲) فارنهایت  ۳) کلوین-
+چاپ -واحد مبدأ:-
+بگذار س برابر بخوان
+بگذار الف برابر به_عدد با س
+چاپ -واحد مقصد:-
+بگذار س برابر بخوان
+بگذار ب برابر به_عدد با س
+چاپ -مقدار:-
+بگذار س برابر بخوان
+بگذار مقدار برابر به_عدد با س
+# ابتدا به سلسیوس تبدیل می‌کنیم
+بگذار سلسیوس برابر مقدار
+اگر الف == ۲
+    بگذار سلسیوس برابر (مقدار - ۳۲) * ۵ / ۹
+اگر الف == ۳
+    بگذار سلسیوس برابر مقدار - ۲۷۳٫۱۵
+# سپس از سلسیوس به واحد مقصد
+بگذار نتیجه برابر سلسیوس
+اگر ب == ۲
+    بگذار نتیجه برابر سلسیوس * ۹ / ۵ + ۳۲
+اگر ب == ۳
+    بگذار نتیجه برابر سلسیوس + ۲۷۳٫۱۵
+چاپ -نتیجه:-
+چاپ خوب با نتیجه
+</pre>
+<div class="row"><b>ب) فرم ویندوز (فقط ظاهر)</b><button onclick="cp(this)">کپی</button></div><pre>پنجره بساز با -تبدیل دما- و ۴۲۰ و 358
+برچسب بساز با -مقدار-
+ورودی بساز
+برچسب بساز با -از واحد-
+منوی انتخاب بساز با -سلسیوس- و -فارنهایت- و -کلوین-
+برچسب بساز با -به واحد-
+منوی انتخاب بساز با -سلسیوس- و -فارنهایت- و -کلوین-
+دکمه بساز با -تبدیل-
+نمایش پنجره
+</pre></div><div class="card"><div class="row"><h3>7. تبدیل ثانیه به روز و ساعت و دقیقه</h3></div>
+<div class="two"><div><p class="badge">فرم ویندوز (عکس واقعی از اجرای Tkinter)</p><img alt="فرم تبدیل ثانیه به روز و ساعت و دقیقه" src="data:image/png;base64,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e91scKvv7dOqfZcurRs633uNqpfnX7uaU+Fcr3F9N4cHvldH7ITjMhYPiWYKfHNlgNHmy0zjY37Dp/jdf5OOpsbNTEwtfhJih4fFzsmtNrOAR2dBMgUAJCB2AEQgdgBEIHYARCB2AETg21jR4uPjmQQIwT8qBiACl7EARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AET4H+MUBWJLBElmAAAAAElFTkSuQmCC"></div>
+<div><p class="badge">نمونهٔ اجرای برنامهٔ کاربردی (خروجی واقعی مفسر)</p><pre class="run">=== ثانیه به روز، ساعت، دقیقه ===
+تعداد ثانیه را وارد کنید:
+» 200000
+روز: 2
+ساعت: 7
+دقیقه: 33
+ثانیه: 20</pre></div></div>
+<div class="row"><b>الف) برنامهٔ کاربردی (کنسول، محاسبه می‌کند)</b><button onclick="cp(this)">کپی</button></div><pre># ---- توابع کمکی ----
+# «صحیح»: عدد اعشاری (مثل ۳٫۰) را به عدد صحیح تبدیل می‌کند (برای اندیس فهرست)
+تابع صحیح با x
+    بگذار i برابر ۰
+    تاوقتی i + ۱ &lt;= x
+        بگذار i برابر i + ۱
+    بازگردان i
+# «خوب»: گرد کردن تا ۶ رقم اعشار و حذف «.0» اضافی از انتهای عدد
+تابع خوب با عدد
+    بگذار ص برابر عدد * ۱۰۰۰۰۰۰ + ۰٫۵
+    بگذار ص برابر (ص - ص % ۱) / ۱۰۰۰۰۰۰
+    بگذار م برابر به_متن با ص
+    بگذار ن برابر طول با م
+    اگر ن &gt; ۲
+        اگر م[ن - ۲] == -.- و م[ن - ۱] == -0-
+            بگذار خ برابر م[۰]
+            بگذار ک برابر ۱
+            تاوقتی ک &lt; ن - ۲
+                بگذار خ برابر خ + م[ک]
+                بگذار ک برابر ک + ۱
+            بازگردان خ
+    بازگردان م
+# ---- برنامه ----
+چاپ -=== ثانیه به روز، ساعت، دقیقه ===-
+چاپ -تعداد ثانیه را وارد کنید:-
+بگذار س برابر بخوان
+بگذار کل برابر به_عدد با س
+بگذار روز برابر (کل - کل % ۸۶۴۰۰) / ۸۶۴۰۰
+بگذار باقی برابر کل % ۸۶۴۰۰
+بگذار ساعت برابر (باقی - باقی % ۳۶۰۰) / ۳۶۰۰
+بگذار باقی برابر باقی % ۳۶۰۰
+بگذار دقیقه برابر (باقی - باقی % ۶۰) / ۶۰
+بگذار ثانیه برابر باقی % ۶۰
+بگذار الف برابر خوب با روز
+بگذار ب برابر خوب با ساعت
+بگذار ج برابر خوب با دقیقه
+بگذار د برابر خوب با ثانیه
+چاپ -روز: - + الف
+چاپ -ساعت: - + ب
+چاپ -دقیقه: - + ج
+چاپ -ثانیه: - + د
+</pre>
+<div class="row"><b>ب) فرم ویندوز (فقط ظاهر)</b><button onclick="cp(this)">کپی</button></div><pre>پنجره بساز با -تبدیل ثانیه به روز و ساعت و دقیقه- و ۴۲۰ و 222
+برچسب بساز با -تعداد ثانیه-
+ورودی بساز
+دکمه بساز با -تبدیل-
+نمایش پنجره
+</pre></div><div class="card"><div class="row"><h3>8. تبدیل مبنای عدد</h3></div>
+<div class="two"><div><p class="badge">فرم ویندوز (عکس واقعی از اجرای Tkinter)</p><img alt="فرم تبدیل مبنای عدد" src="data:image/png;base64,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"></div>
+<div><p class="badge">نمونهٔ اجرای برنامهٔ کاربردی (خروجی واقعی مفسر)</p><pre class="run">=== تبدیل مبنای عدد ===
+یک عدد صحیح نامنفی (دهدهی) وارد کنید:
+» 255
+دودویی: 11111111
+هشتتایی: 377
+شانزدهتایی: FF</pre></div></div>
+<div class="row"><b>الف) برنامهٔ کاربردی (کنسول، محاسبه می‌کند)</b><button onclick="cp(this)">کپی</button></div><pre># ---- توابع کمکی ----
+# «صحیح»: عدد اعشاری (مثل ۳٫۰) را به عدد صحیح تبدیل می‌کند (برای اندیس فهرست)
+تابع صحیح با x
+    بگذار i برابر ۰
+    تاوقتی i + ۱ &lt;= x
+        بگذار i برابر i + ۱
+    بازگردان i
+# «خوب»: گرد کردن تا ۶ رقم اعشار و حذف «.0» اضافی از انتهای عدد
+تابع خوب با عدد
+    بگذار ص برابر عدد * ۱۰۰۰۰۰۰ + ۰٫۵
+    بگذار ص برابر (ص - ص % ۱) / ۱۰۰۰۰۰۰
+    بگذار م برابر به_متن با ص
+    بگذار ن برابر طول با م
+    اگر ن &gt; ۲
+        اگر م[ن - ۲] == -.- و م[ن - ۱] == -0-
+            بگذار خ برابر م[۰]
+            بگذار ک برابر ۱
+            تاوقتی ک &lt; ن - ۲
+                بگذار خ برابر خ + م[ک]
+                بگذار ک برابر ک + ۱
+            بازگردان خ
+    بازگردان م
+# ---- برنامه ----
+بگذار ارقام برابر [-0-، -1-، -2-، -3-، -4-، -5-، -6-، -7-، -8-، -9-، -A-، -B-، -C-، -D-، -E-، -F-]
+# عدد صحیح نامنفی را به مبنای دلخواه (۲ تا ۱۶) می‌نویسد
+تابع مبنا با عدد و پایه
+    اگر عدد == ۰
+        بازگردان -0-
+    بگذار متن برابر ارقام[صحیح با عدد % پایه]
+    بگذار عدد برابر (عدد - عدد % پایه) / پایه
+    تاوقتی عدد &gt; ۰
+        بگذار متن برابر ارقام[صحیح با عدد % پایه] + متن
+        بگذار عدد برابر (عدد - عدد % پایه) / پایه
+    بازگردان متن
+چاپ -=== تبدیل مبنای عدد ===-
+چاپ -یک عدد صحیح نامنفی (دهدهی) وارد کنید:-
+بگذار س برابر بخوان
+بگذار عدد برابر به_عدد با س
+چاپ -دودویی: - + مبنا با عدد و ۲
+چاپ -هشتتایی: - + مبنا با عدد و ۸
+چاپ -شانزدهتایی: - + مبنا با عدد و ۱۶
+</pre>
+<div class="row"><b>ب) فرم ویندوز (فقط ظاهر)</b><button onclick="cp(this)">کپی</button></div><pre>پنجره بساز با -تبدیل مبنای عدد- و ۴۲۰ و 290
+برچسب بساز با -عدد دهدهی-
+ورودی بساز
+برچسب بساز با -مبنای مقصد-
+لیست بساز با -دودویی- و -هشتتایی- و -شانزدهتایی-
+دکمه بساز با -تبدیل-
+نمایش پنجره
+</pre></div><div class="card"><div class="row"><h3>9. مساحت و محیط</h3></div>
+<div class="two"><div><p class="badge">فرم ویندوز (عکس واقعی از اجرای Tkinter)</p><img alt="فرم مساحت و محیط" src="data:image/png;base64,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"></div>
+<div><p class="badge">نمونهٔ اجرای برنامهٔ کاربردی (خروجی واقعی مفسر)</p><pre class="run">=== مساحت و محیط ===
+۱) مربع  ۲) مستطیل  ۳) دایره
+» 3
+شعاع:
+» 5
+مساحت: 78.539816
+محیط: 31.415927</pre></div></div>
+<div class="row"><b>الف) برنامهٔ کاربردی (کنسول، محاسبه می‌کند)</b><button onclick="cp(this)">کپی</button></div><pre># ---- توابع کمکی ----
+# «صحیح»: عدد اعشاری (مثل ۳٫۰) را به عدد صحیح تبدیل می‌کند (برای اندیس فهرست)
+تابع صحیح با x
+    بگذار i برابر ۰
+    تاوقتی i + ۱ &lt;= x
+        بگذار i برابر i + ۱
+    بازگردان i
+# «خوب»: گرد کردن تا ۶ رقم اعشار و حذف «.0» اضافی از انتهای عدد
+تابع خوب با عدد
+    بگذار ص برابر عدد * ۱۰۰۰۰۰۰ + ۰٫۵
+    بگذار ص برابر (ص - ص % ۱) / ۱۰۰۰۰۰۰
+    بگذار م برابر به_متن با ص
+    بگذار ن برابر طول با م
+    اگر ن &gt; ۲
+        اگر م[ن - ۲] == -.- و م[ن - ۱] == -0-
+            بگذار خ برابر م[۰]
+            بگذار ک برابر ۱
+            تاوقتی ک &lt; ن - ۲
+                بگذار خ برابر خ + م[ک]
+                بگذار ک برابر ک + ۱
+            بازگردان خ
+    بازگردان م
+# ---- برنامه ----
+چاپ -=== مساحت و محیط ===-
+چاپ -۱) مربع  ۲) مستطیل  ۳) دایره-
+بگذار س برابر بخوان
+بگذار ک برابر به_عدد با س
+اگر ک == ۱
+    چاپ -طول ضلع:-
+    بگذار س برابر بخوان
+    بگذار الف برابر به_عدد با س
+    چاپ -مساحت: - + خوب با الف * الف
+    چاپ -محیط: - + خوب با ۴ * الف
+وگرنه اگر ک == ۲
+    چاپ -طول:-
+    بگذار س برابر بخوان
+    بگذار الف برابر به_عدد با س
+    چاپ -عرض:-
+    بگذار س برابر بخوان
+    بگذار ب برابر به_عدد با س
+    چاپ -مساحت: - + خوب با الف * ب
+    چاپ -محیط: - + خوب با ۲ * (الف + ب)
+وگرنه اگر ک == ۳
+    چاپ -شعاع:-
+    بگذار س برابر بخوان
+    بگذار ش برابر به_عدد با س
+    چاپ -مساحت: - + خوب با ۳٫۱۴۱۵۹۲۶۵ * ش * ش
+    چاپ -محیط: - + خوب با ۲ * ۳٫۱۴۱۵۹۲۶۵ * ش
+وگرنه
+    چاپ -گزینهٔ نامعتبر-
+</pre>
+<div class="row"><b>ب) فرم ویندوز (فقط ظاهر)</b><button onclick="cp(this)">کپی</button></div><pre>پنجره بساز با -مساحت و محیط- و ۴۲۰ و 358
+برچسب بساز با -شکل-
+منوی انتخاب بساز با -مربع- و -مستطیل- و -دایره-
+برچسب بساز با -اندازه اول-
+ورودی بساز
+برچسب بساز با -اندازه دوم-
+ورودی بساز
+دکمه بساز با -محاسبه-
+نمایش پنجره
+</pre></div><div class="card"><div class="row"><h3>10. شاخص توده بدنی (BMI)</h3></div>
+<div class="two"><div><p class="badge">فرم ویندوز (عکس واقعی از اجرای Tkinter)</p><img alt="فرم شاخص توده بدنی (BMI)" src="data:image/png;base64,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"></div>
+<div><p class="badge">نمونهٔ اجرای برنامهٔ کاربردی (خروجی واقعی مفسر)</p><pre class="run">=== شاخص توده بدنی ===
+وزن (کیلوگرم):
+» 70
+قد (سانتیمتر):
+» 175
+BMI: 22.857143
+وضعیت: طبیعی</pre></div></div>
+<div class="row"><b>الف) برنامهٔ کاربردی (کنسول، محاسبه می‌کند)</b><button onclick="cp(this)">کپی</button></div><pre># ---- توابع کمکی ----
+# «صحیح»: عدد اعشاری (مثل ۳٫۰) را به عدد صحیح تبدیل می‌کند (برای اندیس فهرست)
+تابع صحیح با x
+    بگذار i برابر ۰
+    تاوقتی i + ۱ &lt;= x
+        بگذار i برابر i + ۱
+    بازگردان i
+# «خوب»: گرد کردن تا ۶ رقم اعشار و حذف «.0» اضافی از انتهای عدد
+تابع خوب با عدد
+    بگذار ص برابر عدد * ۱۰۰۰۰۰۰ + ۰٫۵
+    بگذار ص برابر (ص - ص % ۱) / ۱۰۰۰۰۰۰
+    بگذار م برابر به_متن با ص
+    بگذار ن برابر طول با م
+    اگر ن &gt; ۲
+        اگر م[ن - ۲] == -.- و م[ن - ۱] == -0-
+            بگذار خ برابر م[۰]
+            بگذار ک برابر ۱
+            تاوقتی ک &lt; ن - ۲
+                بگذار خ برابر خ + م[ک]
+                بگذار ک برابر ک + ۱
+            بازگردان خ
+    بازگردان م
+# ---- برنامه ----
+چاپ -=== شاخص توده بدنی ===-
+چاپ -وزن (کیلوگرم):-
+بگذار س برابر بخوان
+بگذار وزن برابر به_عدد با س
+چاپ -قد (سانتیمتر):-
+بگذار س برابر بخوان
+بگذار قد برابر به_عدد با س
+بگذار متر برابر قد / ۱۰۰
+بگذار شاخص برابر وزن / (متر * متر)
+چاپ -BMI: - + خوب با شاخص
+اگر شاخص &lt; ۱۸٫۵
+    چاپ -وضعیت: کم وزن-
+وگرنه اگر شاخص &lt; ۲۵
+    چاپ -وضعیت: طبیعی-
+وگرنه اگر شاخص &lt; ۳۰
+    چاپ -وضعیت: اضافه وزن-
+وگرنه
+    چاپ -وضعیت: چاقی-
+</pre>
+<div class="row"><b>ب) فرم ویندوز (فقط ظاهر)</b><button onclick="cp(this)">کپی</button></div><pre>پنجره بساز با -شاخص توده بدنی (BMI)- و ۴۲۰ و 290
+برچسب بساز با -وزن (کیلوگرم)-
+ورودی بساز
+برچسب بساز با -قد (سانتیمتر)-
+ورودی بساز
+دکمه بساز با -محاسبه BMI-
+نمایش پنجره
+</pre></div><div class="card"><div class="row"><h3>11. تخفیف و مالیات</h3></div>
+<div class="two"><div><p class="badge">فرم ویندوز (عکس واقعی از اجرای Tkinter)</p><img alt="فرم تخفیف و مالیات" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAaQAAAFmCAIAAACtDnndAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAGYktHRAD/AP8A/6C9p5MAAAAQY2FOdgAAA4QAAAMgAAAAAAAAAAAmQnRWAAAb90lEQVR42u3deVxU9f748c+ZAWUAIQTELUEtK1fQXFFDyTSXwi6lZba5fXHJbNGwQkwtE6Mwyi1zyUAUl8T8aeHavZorWm64ryAyoLIvM+f8/lCv2nXLNIv36/mXjzkzH8585vjic84Ao6WmpioAKOtMTAEACYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHe6tgqRB/u0/2ma7YwMa1nmv+neN2WtnbnEVYgdABGInmm1HTI+Bc3+c9ELf2UdZCaFsc2AKRL/89ftO+djk7NClucnNzHSgbB/tTIHs19/Fw13Z7eXczLQOZRynsaIVH1w08tk2TRoEtP+/OfuKrrH92I/RQ3t1DWoV2PH54XNScoyrNxu2wsLrvLNg2/5p6JD4Hz/vGRZ/Sr9wk24rKbUb9+653vi5oMwjdpLlJE8at1zvOOrTN+rv/2zM/BP61Zv1jMWjhy/MazNiytzpbwekzYqef/Dyhb2SI0vCn2rRuHGTwNDwBamFFx6Q9tPno2ZszjGUcmgwYPq4kMf6TR4fUvnCQWZLieocGL6m5Db31cjbnxQ1OLR9s4CmQSGDYn4+88euMd7wuUAEYieYUZyba6tQu2nb4CdbVLft3rqr+OrtmpPHfZb8Ezu37MpwbfXO3NXf9n3w0smunrZgVGSyS+i4SWNDXdeMHZ1wXFfKyF4fPyulwM1FU0o5unq4Wcq7eLhbLj6m5Pz5AkP/g+spe3Fhkc1Q9vSVET16jt3o1vW9qXOnhbeyzgn/YmPxdR6jG7oymUy3/FwgBLETxsjb91Pi6gOFSimleT3eu7v7T2+0CXhyUqqjXlhQZCilpyfHREzfeN5QSnPvOC4+6mmXLV8N7hz83Ph11kvno1kpidOS9tnub9ahbet27Rt469Yz2bpSylCGKsrLK/3fL1t6en1M7EqjZVAjxxvt3LnfViSuOVj43xts2z7p3Cli0Q9j+r2/pV7kvLiPXgkOqNcwoF5VS15mZpGhlH5i/tDuwxLTrliT6pkZVqOCu6t2S88FchA7WYzcNbEj5+7RyymllNK82kcu3fDvVauTP+3q7lyxorOmjOx1cTNTCj1cNaWUUha/DoMmxq9aP6Pr+bjohIN2pZR+Iu7NPmPWGI0CCuJ7t/Zv0uPb4qBXQ+o6KKV5tg8NKvzu9ZfCv0pM/mX7zp3bf1m9bN60qJEDnmnfMWyZyyufRXbx0q6/c/bDCZHvJh52LHf58PSp5pO5cORbC0sff/Upn4ytyUvnfPrms08NT3bu+lxbN02p0j0b1mffd7/35eO48NflPx2r+MjDlUy38FwgCe/GymI/sGufwyPP1rx8CmeyeFYuWDHxx6Lm7/qXU0qZHB20nPS0PONh94tdKrXuWBK/Lt25bk1vk1KqYMeGFL3d+JmTOltKczLSzirP6pVdL4xnqtRlwjz3b6fOWvblyKkZuSUmp/sqVfd74KH6T7zx8medWvq6aDfaNyN3x7ZDVZo2q35554yS4mKTp28N/dTiiD6LTebyrpV86zfvNX7cS10ecdeUUg7ValTJXhaX+GvtZ+q65B7Zvnr+5Jj4c4GjXmriqJRx0+cCSYidLEZpSUnRubOFhip38b+/kZMyZdjon2uFzevooSmlPDq89vycsGFd9jV9tHaFYuupE0cOHc5UNdoP+WJUJw9NKcNealMm53IOSmmObpV93a7+AuWqte7zYes+t75Hzt2+3NFNKaWUnpeXp1wquFzepmdu3XrUKXDioqhgy7Ufba7X96Nhh0dE9WgdqRua5uRdr13PmHH9g2uYlVLazZ4LRCF2wl7vhx4NKPferEnJ9cOauBek79mwbM60+F+9ek+a2rvWhWNBc2sxfN7SwO+XrN1zutD8SNsWT4cFNG9ev6rzXV8JmTxr1nQ5sHTmsuYD2tZyyT+x++f46OhNnl2mNbdc/0Gam/9rsSt6nT110lrq7FO9spujduXGe/Vc8Dek8SHZwtgzVn8cNiJuT47dUJrZvfZjPV8fHtaxpuVWH2+cXzSgzVi36F8mPl7uju9bevL4YaPm7bCWGEppJudqLXu+EzG0k58TLxv+PGInkZ6ffvBwps25Ug2/S5fb/j7shdaTxzPydBcfvxpeFtZguFOIHQAR+MYJQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABD5d7K5bu3Ytk4CbCgoKYhLuKmL3V+jfvz+TgBtIT0/Pzc1lHu4qTmMBiEDsAIhA7ACIQOwAiEDsAIhA7ACIQOwAiEDsAIhA7ACIQOwAiEDsAIhA7ACIQOwAiEDsAIhA7ACIQOwAiEDsAIhA7ACIwJ9l/yukp6czCcC9paWmpjILAMo8TmMBiEDsAIhA7ACIQOwAiEDsAIhA7ACIQOwAiEDsAIhA7ACIQOwAiEDsAIhA7ACIQOwAiEDsAIhA7ACIQOwAiEDsAIhA7ACIQOwAiEDsAIhA7ACIQOwAiEDs8I9Tsm7Uk++uLPibDYW/Oz43FveefmbhGwOPvDzv7Sa39qHtJTln8hy9K1q0P/+l7+BQ+JtjZYe/wVHo1WXs9P9reCulM3JSZgx55ong1q27hScds/2Zr3oHh8I/4jBjCsq6ooMJg9sFvvzNnsJ7MrJt+6ehQ+J//LxnWPwp/cJNuq2k1G4opeyHl0SGvRjyRJuWrdq2a9OyRdsnnu49ctFR+/VH008s/CRma6UXJ0zoXXHN6I+XWo2rtxcf+zF6aK+uQa0COz4/fE5KjnH7Q6GsIXZlntMDPSZEdz8bGz5td+ntPN7I258UNTi0fbOApkEhg2J+PmO/+ch62k+fj5qxOcdQyqHBgOnjQh7rN3l8SOULR5stJapzYPiaEqWUzVzp0e5hbw8KaVRR2ctXrdcssEWDqjc6pTTyc/KU5yOBbR4P9vcqPnLoUj8vftmMxaOHL8xrM2LK3OlvB6TNip5/0H6bQ6HsIXYSOPu/9lrzk4nzt5RccaNt19dhr36+8TqrMntxYZHNUPb0lRE9eo7d6Nb1valzp4W3ss4J/2Jj8U1GVkb2+vhZKQVuLppSytHVw81S3sXD3WK+sLXk/PkCQzeUUuY63Qb2qntqbswyW7fPlq9eNHns8EHPt/AxKaWKN3/cOXjkqt8vzcx1Ql59LH/OC82avBKXrpV3Kn/VVs3J4z5L/omdW3ZluLZ6Z+7qb/s+aL7NoVD2EDsRNGcPj/K51qwrk2Su7FaSkrz5qF0pZZz7bUXimoOXw2fb9knnThGLfhjT7/0t9SLnxX30SnBAvYYB9apa8jIzi4wbj6yUoQxVlJd3jZVk6en1MbErjZZBjRyVUsp+YHbEl+f+FTt1WLvqV9ZGt+7blXafr5/L71d5Zt9/ffHTxvU/zBzc1NWtfgNfs9LTk2Mipm88byiluXccFx/1tMuWrwZ3Dn5u/Dqr/seGQpnmwBSUYcbZXWu25bg6WTfHxf5Q0iS8ifPVmw1lNpuUUvbDCZHvrun8ffd2lzaZfKr5ZE4Y+VY5v+7vP+WTsTX5t8M71y5ZsPKAW/eYtm7aTUbWPNuHBn054vWXcl58LrhxLW+LKsxKO3pw76/bNv78S6resP9nkV28NKWUPXV50kH/lyb7O/9uz03eDfwrT5wzaoLX68+2fqiah0s5s2Eryj9nTT+WunPT2h8WL08x2oye1caiDOu6uJkp/h1dL7TM4tdh0MQOA/M3jeveLzrhmdaD6phveSgQO/xjY5e/b8mEqHWnda+6bQfFhj9b9YqFvHF+66a9jn7PVjUr49yObYeqNG1W/fLaxigpLjZ5+tbQTy2O6LPYZC7vWsm3fvNe48e91OURd00p/QYjK6VMlbpMmOf+7dRZy74cOTUjt8TkdF+l6n4PPFT/iTde/qxTS99Lqyw9O/OspXIV9/+9Slcu4PWpE83jJ014bfbI0v+uJDXN0dXHr079R3uOf7/nEw+5mZQyTI4OWk56Wp7x8KVhSq07lsSvS3euW9Pb9EeGQtnGz9nJVHgocUTfyN9aT04a08ZVPzn7xa5JQYsS+te6mDv9dHzfJ6M9J66PCr6rCx77sa9feDqpVVzi0LqO176HXnTudEZmTn6J4WhxcXGrWMnT1eHqNBo5v0T1Dvsuy6/po7UrFFtPnThy6HCmqtF+wJgP+zataPojQ6FMI3aC6KUFudmnD+/alJw4O37d+bqDYr8a2MRNU6pw/XuPD9nZ/sNxA9rWcsk/sfvn+OjoRTldpi2JDHS9u7tkWFe8/cy7vzUaOCIspNVDlZz03IxD21cnW/3D/lX3D1xDKzzxn++XrN1zutDsVtmvTr2A5s3rV3VmrYarEDs5bJvHPP7K3NPKtVqjoKd6vPJitwael3piT08eP2zUvB3WEkMpzeRcrWXPdyKGdvJz+gt2q/Dw8tioKYv/sz+71GRSuq5VqBn85hefP/8AbxjgjiJ2chj56QfTSj2qV/OyXLMj9kLryeMZebqLj18NL8tfvC4ybHlZZ7LybY4VvH0qWugc7jxiB0AErmsAEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdjhgsL9iyJ7P9G8UcOANiGvf/WfM3amBGULsYNSyji/ZsyAyA2VXv1iUdJ3o9pmzR7y+swD5A5lCrGDUkbm//t2ecHjb43q2ay2b93Hh45+xW/3d/O2lTAzKEOIHZQq3bNjl163WeMKmlJKKbNf0ybeWb/uPMXaDmUIsYMy8rOyihw8vdy1izdont4VVVZmtsHcoOwgdgBEIHZQmnNFTydblvX8pZWckZWZrTy9K2rMDcoOYgelHOv51zft2bw990Lt7Ee3bMv0bNiompmpQdlB7KCUyfvJ3p2dkz8dPW/L4WN7V02KnHW0Xq+ejcsxMyhDtNTUVGYBShWkLpwwdsoPO9NL3Wq37vnOB2GtfVjYoSwhdgBE4DQWgAjEDoAIxA6ACMQOgAjEDoAIDkxB2ZaQkMAk3KIePXowCWUYsSv7Pvjgg7s08rJly8rMLHXt2nX//v0cLWUYp7G4TWPGjGES8A/Cyk6KW1m2JCQkfPDBB7d4T6YU/yys7ACIQOwAiEDsAIhA7ACIQOwAiEDsAIhA7ACIQOwAiEDsAIhA7ACIwK+LSXHrv+DFr4KhTGJlJ8Kt/9I+v96PsoqVnQh37688Af8UfJQiABE4jQUgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACscO9VZA0yL/9R9ts195qWOe96t81Zq/9zw8F6YgdABGIHQARiB0AEYgdABGInTRFBxMGtwt8+Zs9hfdkZMNWWHgH3kEoPvZj9NBeXYNaBXZ8fviclBzj+ne1bf80dEj8j5/3DIs/pV+4SbeVlNoNjgVhiJ00Tg/0mBDd/Wxs+LTdpbfzeCNvf1LU4ND2zQKaBoUMivn5jP2WRy45siT8qRaNGzcJDA1fkPonYqtnLB49fGFemxFT5k5/OyBtVvT8g797u1ZP++nzUTM25xhKOTQYMH1cyGP9Jo8PqXzhcLelRHUODF9TwsEgC7ETyNn/tdean0ycv+XK/+62XV+Hvfr5xuskyF5cWGQzlD19ZUSPnmM3unV9b+rcaeGtrHPCv9hYfJORL9LTFoyKTHYJHTdpbKjrmrGjE47rt7CvuqErk+l3h6nm5HGfJf/Ezi27MlxbvTN39bd9HzRfdQcje338rJQCNxdNKeXo6uFmKe/i4W65eKeS8+cLDJ2VnTTETiLN2cOjfK4168okmSu7laQkbz5qV0oZ535bkbjm4OXw2bZ90rlTxKIfxvR7f0u9yHlxH70SHFCvYUC9qpa8zMwi48YjK6WUnpWSOC1pn+3+Zh3atm7XvoG3bj2T/fvY6SfmD+0+LDHtitv1zAyrUcHdVVNKT0+OiZi+8byhlObecVx81NMuW74a3Dn4ufHrrP+TTUMZqigv7xorzNLT62NiVxotgxo5ciDI4sAUyGGc3bVmW46rk3VzXOwPJU3CmzhfvdlQZrNJKWU/nBD57prO33dvd2mTyaeaT+aEkW+V8+v+/lM+GVuTfzu8c+2SBSsPuHWPaeum3Wxk/UTcm30+Ofpgi4CC+N6tp9qVxbfDiJC6vz/4SvdsWJ/t8YL35e/Ahb8u/+lYxZYPVzIpw7oubmaKf0dXTSmllMWvw6CJHQbmbxrXvV90wjOtB9W5cm2nebYPDfpyxOsv5bz4XHDjWt4WVZiVdvTg3l+3bfz5l1S9Yf/PIrt4aRwRshA7QYz8fUsmRK07rXvVbTsoNvzZqles643zWzftdfR7tqpZGed2bDtUpWmz6pfzYZQUF5s8fWvopxZH9FlsMpd3reRbv3mv8eNe6vKIu6aUfoORlVIFOzak6O3Gz5zU2VKak5F2VnlWr+xq/t+DsVqNKtnL4hJ/rf1MXZfcI9tXz58cE38ucNRLTRyVMkyODlpOelqe8bD7xUyVWncsiV+X7ly3pvfvz1BMlbpMmOf+7dRZy74cOTUjt8TkdF+l6n4PPFT/iTde/qxTS18XSiePlpqayiyIV3gocUTfyN9aT04a08ZVPzn7xa5JQYsS+te6GCT9dHzfJ6M9J66PCrbcxujG+UUD2ox1i/5l4uPlbnzHnB0zR46IXXUsXzc0zcm7XrvnBg7rH+xb/sLGX6J6h32X5df00doViq2nThw5dDhT1Wg/YMyHfZtW5HoMboaVnVx6aUFu9unDuzYlJ86OX3e+7qDYd1q7KqVMnjVruhxYOnNZ8wFta7nkn9j9c3x09CbPLtOaW+7yHmlu/q/Fruh19tRJa6mzT/XKbo7alRtbDJ+3NPD7JWv3nC40P9K2xdNhAc2b16/qTOdwS4idWLat4zu/Mve0cq3WKOipiIQXuzXwvLiQswQOHv3csFHv95hfYiilmZyrtez5afTQQNe/ZL+08h7Va3tce5vl/sCeQwJ57XBbRxansVIZ+ekH00o9qlfzspivtd1eaD15PCNPd/Hxq+FlYfmEfzpiB0AEvmEDEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgdgBEIHYARCB2AEQgQ/cuevWrl3LJOCmgoKCmIS7itj9Ffr3788k4AbS09Nzc3OZh7uK01gAIhA7ACIQOwAiEDsAIhA7ACIQOwAiEDsAIhA7ACIQOwAiEDsAIhA7ACIQOwAiEDsAIhA7ACIQOwAiEDsAIhA7ACIQOwAi8GfZ/wrp6elMAnBvaampqcwCgDKP01gAIhA7ACIQOwAiEDsAIhA7ACIQOwAiEDsAIhA7ACIQOwAiEDsAIhA7ACIQOwAiEDsAIhA7ACIQOwAiEDsAIhA7ACLwZ9nFqVOnDpOwf/9+JkEaYsd/dXESEhJ69OjBYSANp7EARCB2AEQgdgBEIHYARCB2AEQgdgBEIHa44wqSBvm3/2ibjZnA3wmxAyACsQMgArEDIAKxAyACvxuLW2LYCouUxfLf48V+eMmYqMQdh46lW3OLDQenChV9fB99ecyYZ/zMtzV8zs5Fcftr9gxtfJ/GZOOuYGWHmyo5siT8qRaNGzcJDA1fkFp44UabudKj3cPeHhTSqKKyl69ar1lgiwZVLTcvlf3wj9Nnrj1pv/DvlVO/XnXMrpSRu3PRlAXbz+lKGdlbE6Ys+jXXuOajT6z5Zsbq43allJ624r2uj9b3D3wqLGr5wQJeJtwEscNN6GkLRkUmu4SOmzQ21HXN2NEJx3WllLlOt4G96p6aG7PM1u2z5asXTR47fNDzLXxufjxpjqdWxcxYc0ZXShXtXvrV5BWH7EopwzCUUppSxtk1U8cnHTc7X7ObRuYvcbFL99qUsm2fOeEHh5BPvoh42v3fo17o9/XeYl4r3Aixw43oWSmJ05L22e5v1qFt63btG3jr1jPZulJKKfuB2RFfnvtX7NRh7aqXv/4AZzbMnbJ0d+HlI65Kw4aeu9euz9SV7VDqodKiA3uP2pWRfSZLWVwsJqVsJSWGvbTkWj+lV3ho4YzlmbUfqe2gVMHJE9nVgrp3atOxz8ezI5rtn7tgBz/Yhxvhmh2uTz8R92afT44+2CKgIL5366l2ZfHtMCKkroNSStlTlycd9H9psr/zjUaw708YP3Hzs8v7X75Jq+DuWrwhZtjoUzX3JWa5VyieOSK8OOD0knS/Fxp7akrzeiwkMDZiyKu5vUODGtX0tKji82dOHj24b9f2jf/efMI1eOSXLz9gVqq8R0XnM1tXbTzg4nFq1cq9pZX8vbnahxshdri+gh0bUvR242dO6mwpzclIO6s8q1d2vfgGhJ6dedZSuYr7DQtjnN+183i1Jo2vPL0tOXn8jIOPW0bSjD3ubd6ZEmbMGPH57GWVg9+Neu0hs1LKVLX7p/Ee306bu/yLd7/KyC3Ryrt5V6nu+8DD9Z95f0jnYH+fC8vI8q0GhD854tPXn/mmfNUGbUOjJ/auZS6rrwPuCGKH6zLspTZlci7noJTm6FbZ1+3Kjab7/aoXJG0/UNqmruPvHufc7csd3ZRSSukF+QXKyWK5vK30QNyMnwr931o4s1fViwWctOLF3w3gVCOo39igfjfeO0ffbh/O6/YhLxNuEdfscHvMNUJeDT478403p63ac6bQrozS3NP71sXFLtxjv+Lw8qpdu8KBpV8v3XHyXH6u9cD6r4cNjNldvdfgp6vc2pFnZH0/LGT8plLmG38aKzvcJs2r09hZemzUlA96RmeXmkxK17UKNYPfbHblnZxaDors8UZERM+FJYZSmrlCreDB00b1aep6i9fXNI+Oo78Jtjgy3fjzR2xqaiqzIEqdOnXu7AfuGLa8rDNZ+TbHCt4+FS3XunBmL7SePJ6RZ7hW9qvh6XTP30fgA3dkYmWHP0tzcPWq6up1g3uYLV6+D3kxU7inuGYHQARiB0AEYgdABGIHQATeoJAoISGBSYA0/OgJABE4jQUgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyDC/werRFw3sWIwrwAAAABJRU5ErkJggg=="></div>
+<div><p class="badge">نمونهٔ اجرای برنامهٔ کاربردی (خروجی واقعی مفسر)</p><pre class="run">=== تخفیف و مالیات ===
+قیمت اصلی:
+» 1200000
+درصد تخفیف:
+» 15
+درصد مالیات:
+» 10
+قیمت پس از تخفیف: 1020000
+قیمت نهایی با مالیات: 1122000</pre></div></div>
+<div class="row"><b>الف) برنامهٔ کاربردی (کنسول، محاسبه می‌کند)</b><button onclick="cp(this)">کپی</button></div><pre># ---- توابع کمکی ----
+# «صحیح»: عدد اعشاری (مثل ۳٫۰) را به عدد صحیح تبدیل می‌کند (برای اندیس فهرست)
+تابع صحیح با x
+    بگذار i برابر ۰
+    تاوقتی i + ۱ &lt;= x
+        بگذار i برابر i + ۱
+    بازگردان i
+# «خوب»: گرد کردن تا ۶ رقم اعشار و حذف «.0» اضافی از انتهای عدد
+تابع خوب با عدد
+    بگذار ص برابر عدد * ۱۰۰۰۰۰۰ + ۰٫۵
+    بگذار ص برابر (ص - ص % ۱) / ۱۰۰۰۰۰۰
+    بگذار م برابر به_متن با ص
+    بگذار ن برابر طول با م
+    اگر ن &gt; ۲
+        اگر م[ن - ۲] == -.- و م[ن - ۱] == -0-
+            بگذار خ برابر م[۰]
+            بگذار ک برابر ۱
+            تاوقتی ک &lt; ن - ۲
+                بگذار خ برابر خ + م[ک]
+                بگذار ک برابر ک + ۱
+            بازگردان خ
+    بازگردان م
+# ---- برنامه ----
+چاپ -=== تخفیف و مالیات ===-
+چاپ -قیمت اصلی:-
+بگذار س برابر بخوان
+بگذار قیمت برابر به_عدد با س
+چاپ -درصد تخفیف:-
+بگذار س برابر بخوان
+بگذار تخفیف برابر به_عدد با س
+چاپ -درصد مالیات:-
+بگذار س برابر بخوان
+بگذار مالیات برابر به_عدد با س
+بگذار بعد برابر قیمت - قیمت * تخفیف / ۱۰۰
+بگذار نهایی برابر بعد + بعد * مالیات / ۱۰۰
+چاپ -قیمت پس از تخفیف: - + خوب با بعد
+چاپ -قیمت نهایی با مالیات: - + خوب با نهایی
+</pre>
+<div class="row"><b>ب) فرم ویندوز (فقط ظاهر)</b><button onclick="cp(this)">کپی</button></div><pre>پنجره بساز با -تخفیف و مالیات- و ۴۲۰ و 358
+برچسب بساز با -قیمت اصلی-
+ورودی بساز
+برچسب بساز با -درصد تخفیف-
+نوار لغزش بساز با ۱۰۰
+برچسب بساز با -درصد مالیات-
+ورودی بساز
+دکمه بساز با -محاسبه-
+نمایش پنجره
+</pre></div><div class="card"><div class="row"><h3>12. تبدیل ارز با نرخ دلخواه</h3></div>
+<div class="two"><div><p class="badge">فرم ویندوز (عکس واقعی از اجرای Tkinter)</p><img alt="فرم تبدیل ارز با نرخ دلخواه" src="data:image/png;base64,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aXp1VKv2HTsN+fPY/r1jmgcopZRetm/tjJlb87Xw6B5JKclDI42qyN/PUGrPO6V3DK16o+Yu3Ls2bavdEt2mqVEp5dfimquLPl+R8UO7IdFBjl/2bFo1f07ab3GTHov15+zANwabzcYsyNShQ4cr5ZuK9dLvZw5P/Phk61tubteoovBY7i8HDxWoa3o9PfmNkbeEGZVSeuneDyeMS/n6SJmmGwyBTW/o+cCYF0f3bhXg+0H4pmLhiJ1cDRw7/eTfXnoq+8HV47v59ubLmfvPv63d8nO+0xQS0brDDV27desUaal5japXFB87Wui2NI+KCPG/4M/qiJ1wXMaigRisfV9f0tvs82WmuWXcg2Pj6h4ywBrVzsrU4qIQOzQUY2BIGLOAK2dBMgUAJCB2AEQgdgBEIHYARCB2AETgbqxo6enpTAKE4IeKAYjAZSwAEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQAR/h/ocIMX2sukXgAAAABJRU5ErkJggg=="></div>
+<div><p class="badge">نمونهٔ اجرای برنامهٔ کاربردی (خروجی واقعی مفسر)</p><pre class="run">=== تبدیل ارز ===
+مقدار ارز (مثلاً دلار):
+» 250
+نرخ هر واحد به ریال یا تومان:
+» 60000
+معادل: 15000000</pre></div></div>
+<div class="row"><b>الف) برنامهٔ کاربردی (کنسول، محاسبه می‌کند)</b><button onclick="cp(this)">کپی</button></div><pre># ---- توابع کمکی ----
+# «صحیح»: عدد اعشاری (مثل ۳٫۰) را به عدد صحیح تبدیل می‌کند (برای اندیس فهرست)
+تابع صحیح با x
+    بگذار i برابر ۰
+    تاوقتی i + ۱ &lt;= x
+        بگذار i برابر i + ۱
+    بازگردان i
+# «خوب»: گرد کردن تا ۶ رقم اعشار و حذف «.0» اضافی از انتهای عدد
+تابع خوب با عدد
+    بگذار ص برابر عدد * ۱۰۰۰۰۰۰ + ۰٫۵
+    بگذار ص برابر (ص - ص % ۱) / ۱۰۰۰۰۰۰
+    بگذار م برابر به_متن با ص
+    بگذار ن برابر طول با م
+    اگر ن &gt; ۲
+        اگر م[ن - ۲] == -.- و م[ن - ۱] == -0-
+            بگذار خ برابر م[۰]
+            بگذار ک برابر ۱
+            تاوقتی ک &lt; ن - ۲
+                بگذار خ برابر خ + م[ک]
+                بگذار ک برابر ک + ۱
+            بازگردان خ
+    بازگردان م
+# ---- برنامه ----
+# نرخ ارز ثابت نیست؛ نرخ روز را خودتان وارد می‌کنید
+چاپ -=== تبدیل ارز ===-
+چاپ -مقدار ارز (مثلاً دلار):-
+بگذار س برابر بخوان
+بگذار مقدار برابر به_عدد با س
+چاپ -نرخ هر واحد به ریال یا تومان:-
+بگذار س برابر بخوان
+بگذار نرخ برابر به_عدد با س
+چاپ -معادل: - + خوب با مقدار * نرخ
+</pre>
+<div class="row"><b>ب) فرم ویندوز (فقط ظاهر)</b><button onclick="cp(this)">کپی</button></div><pre>پنجره بساز با -تبدیل ارز با نرخ دلخواه- و ۴۲۰ و 290
+برچسب بساز با -مقدار ارز-
+ورودی بساز
+برچسب بساز با -نرخ هر واحد-
+ورودی بساز
+دکمه بساز با -تبدیل-
+نمایش پنجره
+</pre></div><div class="card"><div class="row"><h3>13. ماشین حساب</h3></div>
+<div class="two"><div><p class="badge">فرم ویندوز (عکس واقعی از اجرای Tkinter)</p><img alt="فرم ماشین حساب" src="data:image/png;base64,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5vQKaNzYd/+qT1btOH7mfHH+/o2fjBg8ZXdwr6FP1a/amWcUfDkibvwmB/PG78bKDtdJC+g8dr4+NXXmOwmTTztMJqXrmu/dHRMjy96o+oNDxvQcPmpUwud2QynN7HtPx6GzR/dr41PF62ua/2Pvzu1o8WTc+P1nrNVqZQqiNG3a9MZ+4Y7hPFeQW3De6elbN7C25WoXzly2/ONHT50zfIJCG9WpfttfR+ALd2RiZYffS/PwCWjgE1DBLcyWgJD7ApgUbiuu2QEQgdgBEIHYARCB2AEQgRcoJFq2bBlDgDS89QSACDyNBSACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIAKxAyACsQMgArEDIML/A6GHcnkMDvm6AAAAAElFTkSuQmCC"></div>
+<div><p class="badge">نمونهٔ اجرای برنامهٔ کاربردی (خروجی واقعی مفسر)</p><pre class="run">=== ماشین حساب ===
+عدد اول:
+» 12
+عدد دوم:
+» 4
+عملیات: ۱) جمع  ۲) تفریق  ۳) ضرب  ۴) تقسیم
+» 4
+حاصل: 3</pre></div></div>
+<div class="row"><b>الف) برنامهٔ کاربردی (کنسول، محاسبه می‌کند)</b><button onclick="cp(this)">کپی</button></div><pre># ---- توابع کمکی ----
+# «صحیح»: عدد اعشاری (مثل ۳٫۰) را به عدد صحیح تبدیل می‌کند (برای اندیس فهرست)
+تابع صحیح با x
+    بگذار i برابر ۰
+    تاوقتی i + ۱ &lt;= x
+        بگذار i برابر i + ۱
+    بازگردان i
+# «خوب»: گرد کردن تا ۶ رقم اعشار و حذف «.0» اضافی از انتهای عدد
+تابع خوب با عدد
+    بگذار ص برابر عدد * ۱۰۰۰۰۰۰ + ۰٫۵
+    بگذار ص برابر (ص - ص % ۱) / ۱۰۰۰۰۰۰
+    بگذار م برابر به_متن با ص
+    بگذار ن برابر طول با م
+    اگر ن &gt; ۲
+        اگر م[ن - ۲] == -.- و م[ن - ۱] == -0-
+            بگذار خ برابر م[۰]
+            بگذار ک برابر ۱
+            تاوقتی ک &lt; ن - ۲
+                بگذار خ برابر خ + م[ک]
+                بگذار ک برابر ک + ۱
+            بازگردان خ
+    بازگردان م
+# ---- برنامه ----
+چاپ -=== ماشین حساب ===-
+چاپ -عدد اول:-
+بگذار س برابر بخوان
+بگذار الف برابر به_عدد با س
+چاپ -عدد دوم:-
+بگذار س برابر بخوان
+بگذار ب برابر به_عدد با س
+چاپ -عملیات: ۱) جمع  ۲) تفریق  ۳) ضرب  ۴) تقسیم-
+بگذار س برابر بخوان
+بگذار ک برابر به_عدد با س
+اگر ک == ۱
+    چاپ -حاصل: - + خوب با الف + ب
+وگرنه اگر ک == ۲
+    چاپ -حاصل: - + خوب با الف - ب
+وگرنه اگر ک == ۳
+    چاپ -حاصل: - + خوب با الف * ب
+وگرنه اگر ک == ۴
+    اگر ب == ۰
+        چاپ -تقسیم بر صفر ممکن نیست.-
+    وگرنه
+        چاپ -حاصل: - + خوب با الف / ب
+وگرنه
+    چاپ -عملیات نامعتبر-
+</pre>
+<div class="row"><b>ب) فرم ویندوز (فقط ظاهر)</b><button onclick="cp(this)">کپی</button></div><pre>پنجره بساز با -ماشین حساب- و ۴۲۰ و 358
+برچسب بساز با -عدد اول-
+ورودی بساز
+برچسب بساز با -عدد دوم-
+ورودی بساز
+برچسب بساز با -عملیات-
+منوی انتخاب بساز با -جمع- و -تفریق- و -ضرب- و -تقسیم-
+دکمه بساز با -محاسبه-
+نمایش پنجره
+</pre></div><div class="card"><div class="row"><h3>14. تاریخ میلادی به شمسی</h3></div>
+<div class="two"><div><p class="badge">فرم ویندوز (عکس واقعی از اجرای Tkinter)</p><img alt="فرم تاریخ میلادی به شمسی" src="data:image/png;base64,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mKRM7c/v1s5k5+g1fLwMt7TV8pkCvEtSN+4+5lAVb0kpxx/LJ3507tnYRWPCG7hxIxGDp2erM0Pt7hFhH41786WCwQN7tHnA36xsuZnH0tP2/7zj/3ZatEci35/8lJ9BKb/H+oXGTnxjWOGQiLBW99c2q4v5p08eS//9wN4d23ZnePV496OXm5iUfvbAlp8LvNxzdsfHflPSdkJbDz1vffyy1JBel8NlDuoZNafnqKJd0/u/Fp04oEtUM1Ppwe1b83xf8P/zl6pt/4Yfjtfq1LyO8Za2ej26rkwmo1J6XkoFW1IOy4Z16SEvLQjx4BZC7FBdGOs8NetLn88Xfbr+o3cXZReWGN1r1mkQ1OTBh5/4x8vvP9npPs9LSTAG9p+b4Pv5x3EbPhw/P7uwxODm7V+vwX1Nmj884H/f6N0jpK6bUkrpRb+vmTU7JUvzC+4WFTvhuUCjynN1MRRYM8/rzX0uh6g0Z9+ahBSrR/D9/kallEv9RvXy1scn7W88INiz8OjezSsWxCScC530UlvXW9tq+aXL/2lXmmvQc4EmpYwVbUlpeWfOmgPq+fAsnTAGi8XCFKqWZs2a3SvvVKwX7Jw9ZOQXuUHtHm1c42LOqYyjh4+cUY26j5j6r+HtahmVUnrBvmXvjovddLxI0w0Gd/8W4QNHjYnscd9tPH20HU4aN3zyr10WrJva1esmtuQ4/skLz6zrHJ80Otj1Vo7HOxVXUcSu6nFy7PTcr996Ne3vK8d3uLkU2DJ+/HpN8sEsm8k7IKhZi9YdOjwc6HH1Oap+8eypkzmlHnUbBHi73p4HVFppcWFe1pEDuzYmLU9IyQ+Oip0/qq234aa2pOd8+/aA8b+2GjVuZL/OD9Zx1wqzD+/dvDEnZOSzwaaKD03sqihiV/U4+5GddqHgnN1cy8v1Hp6BfffUx4fGZSmv+q3C+g4aOvjplrVNlfl+25ENsbMXfvXjobxSo1FpmqHG/T3e+nDe802IXfVF7Kqee+g09q7Ri6zpmaW+Der7mU1/YRX7+dzTuUV21xr+dWvd9ELEroriBQpURQbPek2b/vVVXLz8Ar38GKcM/J0dABGIHQARiB0AEYgdABF4gaJKSkxMZAhApfCnJwBE4DQWgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAjEDoAIxA6ACMQOgAj/D7FMvsB6GT90AAAAAElFTkSuQmCC"></div>
+<div><p class="badge">نمونهٔ اجرای برنامهٔ کاربردی (خروجی واقعی مفسر)</p><pre class="run">=== میلادی به شمسی ===
+سال میلادی:
+» 2026
+ماه (۱ تا ۱۲):
+» 9
+روز:
+» 28
+تاریخ شمسی: 1405/7/6
+نام ماه: مهر</pre></div></div>
+<div class="row"><b>الف) برنامهٔ کاربردی (کنسول، محاسبه می‌کند)</b><button onclick="cp(this)">کپی</button></div><pre># ---- توابع کمکی ----
+# «صحیح»: عدد اعشاری (مثل ۳٫۰) را به عدد صحیح تبدیل می‌کند (برای اندیس فهرست)
+تابع صحیح با x
+    بگذار i برابر ۰
+    تاوقتی i + ۱ &lt;= x
+        بگذار i برابر i + ۱
+    بازگردان i
+# «خوب»: گرد کردن تا ۶ رقم اعشار و حذف «.0» اضافی از انتهای عدد
+تابع خوب با عدد
+    بگذار ص برابر عدد * ۱۰۰۰۰۰۰ + ۰٫۵
+    بگذار ص برابر (ص - ص % ۱) / ۱۰۰۰۰۰۰
+    بگذار م برابر به_متن با ص
+    بگذار ن برابر طول با م
+    اگر ن &gt; ۲
+        اگر م[ن - ۲] == -.- و م[ن - ۱] == -0-
+            بگذار خ برابر م[۰]
+            بگذار ک برابر ۱
+            تاوقتی ک &lt; ن - ۲
+                بگذار خ برابر خ + م[ک]
+                بگذار ک برابر ک + ۱
+            بازگردان خ
+    بازگردان م
+# ---- برنامه ----
+تابع خارج با الف و ب
+    بازگردان (الف - الف % ب) / ب
+بگذار روزهای_ماه برابر [۰، ۳۱، ۵۹، ۹۰، ۱۲۰، ۱۵۱، ۱۸۱، ۲۱۲، ۲۴۳، ۲۷۳، ۳۰۴، ۳۳۴]
+بگذار نام_ماه‌ها برابر [-فروردین-، -اردیبهشت-، -خرداد-، -تیر-، -مرداد-، -شهریور-، -مهر-، -آبان-، -آذر-، -دی-، -بهمن-، -اسفند-]
+چاپ -=== میلادی به شمسی ===-
+چاپ -سال میلادی:-
+بگذار س برابر بخوان
+بگذار گس برابر به_عدد با س
+چاپ -ماه (۱ تا ۱۲):-
+بگذار س برابر بخوان
+بگذار ع برابر به_عدد با س
+بگذار گم برابر صحیح با ع
+چاپ -روز:-
+بگذار س برابر بخوان
+بگذار گر برابر به_عدد با س
+اگر گس &gt; ۱۶۰۰
+    بگذار جس برابر ۹۷۹
+    بگذار گس برابر گس - ۱۶۰۰
+وگرنه
+    بگذار جس برابر ۰
+    بگذار گس برابر گس - ۶۲۱
+بگذار گسب برابر گس
+اگر گم &gt; ۲
+    بگذار گسب برابر گس + ۱
+بگذار ا برابر خارج با (گسب + ۳) و ۴
+بگذار ب برابر خارج با (گسب + ۹۹) و ۱۰۰
+بگذار ج برابر خارج با (گسب + ۳۹۹) و ۴۰۰
+بگذار روزها برابر ۳۶۵ * گس + ا - ب + ج - ۸۰ + گر + روزهای_ماه[گم - ۱]
+بگذار جس برابر جس + ۳۳ * خارج با روزها و ۱۲۰۵۳
+بگذار روزها برابر روزها % ۱۲۰۵۳
+بگذار جس برابر جس + ۴ * خارج با روزها و ۱۴۶۱
+بگذار روزها برابر روزها % ۱۴۶۱
+اگر روزها &gt; ۳۶۵
+    بگذار جس برابر جس + خارج با (روزها - ۱) و ۳۶۵
+    بگذار روزها برابر (روزها - ۱) % ۳۶۵
+اگر روزها &lt; ۱۸۶
+    بگذار جم برابر ۱ + خارج با روزها و ۳۱
+    بگذار جر برابر ۱ + روزها % ۳۱
+وگرنه
+    بگذار جم برابر ۷ + خارج با (روزها - ۱۸۶) و ۳۰
+    بگذار جر برابر ۱ + (روزها - ۱۸۶) % ۳۰
+بگذار سال برابر خوب با جس
+بگذار ماه برابر خوب با جم
+بگذار روز برابر خوب با جر
+چاپ -تاریخ شمسی: - + سال + -/- + ماه + -/- + روز
+بگذار ن برابر صحیح با جم
+چاپ -نام ماه: - + نام_ماه‌ها[ن - ۱]
+</pre>
+<div class="row"><b>ب) فرم ویندوز (فقط ظاهر)</b><button onclick="cp(this)">کپی</button></div><pre>پنجره بساز با -تاریخ میلادی به شمسی- و ۴۲۰ و 358
+برچسب بساز با -سال میلادی-
+ورودی بساز
+برچسب بساز با -ماه-
+ورودی بساز
+برچسب بساز با -روز-
+ورودی بساز
+دکمه بساز با -تبدیل تاریخ-
+نمایش پنجره
+</pre></div><div class="card"><div class="row"><h3>15. تاریخ شمسی به میلادی</h3></div>
+<div class="two"><div><p class="badge">فرم ویندوز (عکس واقعی از اجرای Tkinter)</p><img alt="فرم تاریخ شمسی به میلادی" src="data:image/png;base64,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itiVPa7es9Mu5p93mCv6uN/HM3DsHPvkq7EZyiekcXiPvq/2796okul2ft92bN2MSXO+/s+RXLvRqDTN4Fu70/vTp75Yl9iVX8Su7LmPDmPvGb3QmppuD6geEmg2/Y17cVzIOZtT6HD3DapS8ZbviNiVUbxBgbLI4F21Xr2/fy9uPoHVfAIZpwz8nR0AEYgdABGIHQARiB0AEXiDokxKSEhgCMBt4U9PAIjAYSwAEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEYgdABGIHQARiB0AEf4fFe4SZy6hU6IAAAAASUVORK5CYII="></div>
+<div><p class="badge">نمونهٔ اجرای برنامهٔ کاربردی (خروجی واقعی مفسر)</p><pre class="run">=== شمسی به میلادی ===
+سال شمسی:
+» 1405
+ماه (۱ تا ۱۲):
+» 7
+روز:
+» 6
+تاریخ میلادی: 2026/9/28</pre></div></div>
+<div class="row"><b>الف) برنامهٔ کاربردی (کنسول، محاسبه می‌کند)</b><button onclick="cp(this)">کپی</button></div><pre># ---- توابع کمکی ----
+# «صحیح»: عدد اعشاری (مثل ۳٫۰) را به عدد صحیح تبدیل می‌کند (برای اندیس فهرست)
+تابع صحیح با x
+    بگذار i برابر ۰
+    تاوقتی i + ۱ &lt;= x
+        بگذار i برابر i + ۱
+    بازگردان i
+# «خوب»: گرد کردن تا ۶ رقم اعشار و حذف «.0» اضافی از انتهای عدد
+تابع خوب با عدد
+    بگذار ص برابر عدد * ۱۰۰۰۰۰۰ + ۰٫۵
+    بگذار ص برابر (ص - ص % ۱) / ۱۰۰۰۰۰۰
+    بگذار م برابر به_متن با ص
+    بگذار ن برابر طول با م
+    اگر ن &gt; ۲
+        اگر م[ن - ۲] == -.- و م[ن - ۱] == -0-
+            بگذار خ برابر م[۰]
+            بگذار ک برابر ۱
+            تاوقتی ک &lt; ن - ۲
+                بگذار خ برابر خ + م[ک]
+                بگذار ک برابر ک + ۱
+            بازگردان خ
+    بازگردان م
+# ---- برنامه ----
+تابع خارج با الف و ب
+    بازگردان (الف - الف % ب) / ب
+بگذار روزهای_ماه_میلادی برابر [۰، ۳۱، ۲۸، ۳۱، ۳۰، ۳۱، ۳۰، ۳۱، ۳۱، ۳۰، ۳۱، ۳۰، ۳۱]
+چاپ -=== شمسی به میلادی ===-
+چاپ -سال شمسی:-
+بگذار س برابر بخوان
+بگذار جس برابر به_عدد با س
+چاپ -ماه (۱ تا ۱۲):-
+بگذار س برابر بخوان
+بگذار ع برابر به_عدد با س
+بگذار جم برابر ع
+چاپ -روز:-
+بگذار س برابر بخوان
+بگذار جر برابر به_عدد با س
+بگذار جس برابر جس + ۱۵۹۵
+بگذار ا برابر خارج با جس و ۳۳
+بگذار ب برابر خارج با (جس % ۳۳ + ۳) و ۴
+بگذار روزها برابر ۳۶۵ * جس + ۸ * ا + ب + جر - ۳۵۵۶۶۸
+اگر جم &lt; ۷
+    بگذار روزها برابر روزها + (جم - ۱) * ۳۱
+وگرنه
+    بگذار روزها برابر روزها + (جم - ۷) * ۳۰ + ۱۸۶
+بگذار گس برابر ۴۰۰ * خارج با روزها و ۱۴۶۰۹۷
+بگذار روزها برابر روزها % ۱۴۶۰۹۷
+اگر روزها &gt; ۳۶۵۲۴
+    بگذار روزها برابر روزها - ۱
+    بگذار گس برابر گس + ۱۰۰ * خارج با روزها و ۳۶۵۲۴
+    بگذار روزها برابر روزها % ۳۶۵۲۴
+    اگر روزها &gt;= ۳۶۵
+        بگذار روزها برابر روزها + ۱
+بگذار گس برابر گس + ۴ * خارج با روزها و ۱۴۶۱
+بگذار روزها برابر روزها % ۱۴۶۱
+اگر روزها &gt; ۳۶۵
+    بگذار گس برابر گس + خارج با (روزها - ۱) و ۳۶۵
+    بگذار روزها برابر (روزها - ۱) % ۳۶۵
+بگذار گر برابر روزها + ۱
+بگذار کبیسه برابر ۲۸
+اگر گس % ۴ == ۰
+    اگر گس % ۱۰۰ != ۰
+        بگذار کبیسه برابر ۲۹
+اگر گس % ۴۰۰ == ۰
+    بگذار کبیسه برابر ۲۹
+بگذار گم برابر ۱
+بگذار پایان برابر ۰
+تاوقتی پایان == ۰
+    بگذار طول_ماه برابر روزهای_ماه_میلادی[گم]
+    اگر گم == ۲
+        بگذار طول_ماه برابر کبیسه
+    اگر گر &gt; طول_ماه
+        بگذار گر برابر گر - طول_ماه
+        بگذار گم برابر گم + ۱
+    وگرنه
+        بگذار پایان برابر ۱
+بگذار الف برابر خوب با گس
+بگذار ب برابر خوب با گم
+بگذار ج برابر خوب با گر
+چاپ -تاریخ میلادی: - + الف + -/- + ب + -/- + ج
+</pre>
+<div class="row"><b>ب) فرم ویندوز (فقط ظاهر)</b><button onclick="cp(this)">کپی</button></div><pre>پنجره بساز با -تاریخ شمسی به میلادی- و ۴۲۰ و 358
+برچسب بساز با -سال شمسی-
+ورودی بساز
+برچسب بساز با -ماه-
+ورودی بساز
+برچسب بساز با -روز-
+ورودی بساز
+دکمه بساز با -تبدیل تاریخ-
+نمایش پنجره
+</pre></div><script>function cp(b){var t=b.parentNode.nextElementSibling.textContent;function ok(){var o=b.textContent;b.textContent='کپی شد ✓';setTimeout(function(){b.textContent=o},1500)}
+function fb(){var a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy');ok()}catch(e){}document.body.removeChild(a)}
+if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok,fb)}else{fb()}}</script></main></body></html>
